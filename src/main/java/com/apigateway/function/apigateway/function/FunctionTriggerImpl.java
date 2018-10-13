@@ -10,7 +10,7 @@ import java.util.List;
 public class FunctionTriggerImpl implements FunctionTrigger {
 
     @Autowired
-    FunctionRequestTemplateService functionRequestTemplateService;
+    public FunctionRequestTemplateService functionRequestTemplateService;
 
     @Autowired
     public MessageService messageService;
