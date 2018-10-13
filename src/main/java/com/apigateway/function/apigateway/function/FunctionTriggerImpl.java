@@ -1,4 +1,5 @@
 package com.apigateway.function.apigateway.function;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,22 +10,27 @@ import java.util.List;
 public class FunctionTriggerImpl implements FunctionTrigger {
 
     @Autowired
+    FunctionRequestTemplateService functionRequestTemplateService;
+
+    @Autowired
     public MessageService messageService;
 
 
     public List functioTrigger(String functionName, String functionRequestBody){
 
         List listA = new ArrayList();
-        boolean statusOfTriggering = messageService.produceFunctionMessage(functionName, functionRequestBody);
+        boolean status ;
 
-        if (statusOfTriggering == true ){
-            listA.add("{'status': 'Ok'}");
+        JSONObject trustedTemplate = functionRequestTemplateService.getTemplateWithName(functionName);
+        JSONObject currentfunctionRequestTemplate = new JSONObject(functionRequestBody);
 
+        if(trustedTemplate.keys() == currentfunctionRequestTemplate.keys()) {
+            status = messageService.produceFunctionMessage(functionName, functionRequestBody);
         }else{
-            listA.add("{'status': 'Error'}");
-
-
+            status = false ;
         }
+
+        listA.add("status : " + status);
         return listA ;
 
 
